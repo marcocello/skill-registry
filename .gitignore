@@ -1,0 +1,46 @@
+## Whitelist-style monorepo ignore.
+## Ignore by default, then allow repository-owned paths explicitly.
+
+# 1. Ignore everything.
+*
+
+# 2. Allow repository-owned files and directories.
+!.gitignore
+!README.md
+!pyproject.toml
+!.vscode/
+!.vscode/tasks.json
+!backend/
+!backend/**
+!deployment/
+!deployment/**
+!docs/
+!docs/**
+!frontend/
+!frontend/**
+!tests/
+!tests/**
+
+# 3. Block generated, local, secret, and runtime artifacts.
+**/.DS_Store
+**/__pycache__/
+**/.pytest_cache/
+**/.ruff_cache/
+**/.mypy_cache/
+**/.pnpm-store/
+**/.cache/
+**/node_modules/
+**/dist/
+**/dist-ssr/
+**/coverage/
+docs/
+*.db
+*.log
+*.pid
+*.sqlite
+*.sqlite3
+.env
+.env.*
+*.egg-info/
+**/build/
+workspace/

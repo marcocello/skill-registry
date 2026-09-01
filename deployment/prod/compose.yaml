@@ -1,0 +1,60 @@
+name: skills-registry
+
+services:
+  backend:
+    image: skills-registry-backend:local
+    build:
+      context: ../..
+      dockerfile: backend/Dockerfile
+    environment:
+      DATABASE_PATH: /workspace/registry.sqlite3
+      GIT_REPOSITORY_PATH: /workspace/registry-git
+      HOST_WORKSPACE_PATH: ${PWD:?Run Docker Compose from the cloned repository root}/workspace
+      HOST: 0.0.0.0
+      PORT: 8000
+      GIT_EXPORT_AUTHOR_NAME: Skill Registry
+      GIT_EXPORT_AUTHOR_EMAIL: registry@example.invalid
+    volumes:
+      - ${PWD:?Run Docker Compose from the cloned repository root}/workspace:/workspace
+    develop:
+      watch:
+        - action: rebuild
+          path: ../../backend
+          ignore:
+            - "**/__pycache__/"
+            - "**/.pytest_cache/"
+        - action: rebuild
+          path: ../../pyproject.toml
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=3).read()"]
+      interval: 5s
+      timeout: 4s
+      retries: 12
+      start_period: 5s
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ../../frontend
+      dockerfile: Dockerfile
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - ${FRONTEND_BIND_ADDRESS:-127.0.0.1}:${FRONTEND_PORT:-5175}:80
+    develop:
+      watch:
+        - action: rebuild
+          path: ../../frontend/app
+          ignore:
+            - node_modules/
+            - dist/
+            - coverage/
+            - .vitest-attachments/
+    healthcheck:
+      test: [CMD, wget, --quiet, --output-document=-, http://127.0.0.1/health]
+      interval: 5s
+      timeout: 4s
+      retries: 12
+      start_period: 5s
+    restart: unless-stopped
