@@ -20,6 +20,7 @@
 !frontend/**
 !tests/
 !tests/**
+!*.mp4
 
 # 3. Block generated, local, secret, and runtime artifacts.
 **/.DS_Store
