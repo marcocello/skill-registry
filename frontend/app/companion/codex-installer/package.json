@@ -1,0 +1,15 @@
+{
+  "name": "skills-registry-connect",
+  "version": "0.1.0",
+  "description": "Connect Codex to a self-hosted Skill Registry",
+  "type": "module",
+  "bin": {
+    "skills-registry-connect": "bin/skills-registry-connect.mjs"
+  },
+  "files": [
+    "bin"
+  ],
+  "engines": {
+    "node": ">=18"
+  }
+}

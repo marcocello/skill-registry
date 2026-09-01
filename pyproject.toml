@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "skills-registry-backend"
+version = "0.1.0"
+description = "Skill Registry backend with SQLite authority and one-way Git export"
+requires-python = ">=3.12"
+dependencies = ["Flask>=3.1,<4", "gunicorn>=23,<24", "PyJWT[crypto]>=2.10,<3"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8,<10"]
+
+[tool.setuptools.packages.find]
+include = ["backend*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

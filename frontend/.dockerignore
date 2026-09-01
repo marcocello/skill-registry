@@ -1,0 +1,16 @@
+.git
+.gitignore
+.venv
+**/__pycache__
+**/.pytest_cache
+**/node_modules
+**/dist
+**/proof/runs
+.env
+.env.*
+data
+workspace
+workspace/**
+*.db
+*.sqlite
+*.sqlite3
