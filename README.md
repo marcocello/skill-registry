@@ -1,9 +1,6 @@
 # Skill Registry
 
-<video controls preload="metadata" width="100%">
-  <source src="./demo.mp4" type="video/mp4">
-  <a href="./demo.mp4">Watch the Skill Registry demo</a>
-</video>
+![Skill Registry team library](./image.png)
 
 Skill Registry is a self-hosted catalogue where teams can publish, discover, version, and install skills for their agents. It can run completely open or use Google Workspace, with proposals and admin review. Accepted versions are also exported to Git, so history and backups do not depend on someone remembering which Slack thread contained the good copy.
 
