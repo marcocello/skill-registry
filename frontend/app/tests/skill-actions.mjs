@@ -87,14 +87,13 @@ try {
     .getByRole('heading', { name: 'Action Display Name', exact: true })
     .waitFor()
 
-  const getForYourTool = page.getByRole('button', {
-    name: 'Get for your tool',
-    exact: true,
-  })
-  await getForYourTool.waitFor()
-
-  if ((await getForYourTool.getAttribute('data-variant')) !== 'default')
-    throw new Error('Get for your tool is not the primary action')
+  const download = page.getByRole('button', { name: 'Download', exact: true })
+  const upload = page.getByRole('button', { name: 'Upload', exact: true })
+  await download.waitFor()
+  await upload.waitFor()
+  if ((await download.getAttribute('data-variant')) !== 'outline' ||
+      (await upload.getAttribute('data-variant')) !== 'default')
+    throw new Error('Skill transfer menus do not match the existing action hierarchy')
   if (
     (await page.getByRole('button', { name: 'Copy install path' }).count()) ||
     (await page.getByRole('button', { name: 'MCP download' }).count()) ||
@@ -108,23 +107,20 @@ try {
   )
     throw new Error('Usage tracking is still visible')
 
-  await getForYourTool.click()
-  const dialog = page.getByRole('dialog')
-  await dialog.waitFor()
-  await page.getByRole('heading', { name: 'Get this skill' }).waitFor()
-  const prompt = await dialog.getByTestId('mcp-prompt').innerText()
-  if (
-    !prompt.includes('Action Display Name') ||
-    !prompt.includes('action-test') ||
-    !prompt.includes('$skills-registry-guide') ||
-    !prompt.includes('/skills-registry:guide') ||
-    prompt.includes('Use the `skills-registry` MCP server')
-  )
-    throw new Error(`Unexpected companion prompt: ${prompt}`)
-  await dialog
-    .getByRole('button', { name: 'Close', exact: true })
-    .first()
-    .click()
+  for (const [client, command] of [['Codex', '$skills-registry-guide'], ['Claude', '/skills-registry:guide']]) {
+    await download.click()
+    await page.getByRole('menuitem', { name: client, exact: true }).click()
+    const dialog = page.getByRole('dialog')
+    await dialog.getByRole('heading', { name: `Download with ${client}`, exact: true }).waitFor()
+    const prompt = await dialog.getByTestId('assistant-transfer-prompt').innerText()
+    if (!prompt.includes('Action Display Name') || !prompt.includes('action-test') ||
+        !prompt.includes(command) || !prompt.includes('.skill_id') ||
+        prompt.includes('Use the `skills-registry` MCP server'))
+      throw new Error(`Unexpected ${client} companion prompt: ${prompt}`)
+    await dialog.getByRole('link', { name: `Connect ${client}`, exact: true }).waitFor()
+    await dialog.getByRole('button', { name: 'Copy prompt', exact: true }).waitFor()
+    await dialog.getByRole('button', { name: 'Close', exact: true }).first().click()
+  }
 
 } finally {
   await browser.close()

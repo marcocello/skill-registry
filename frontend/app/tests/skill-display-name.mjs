@@ -92,7 +92,7 @@ try {
     .getByRole('button', { name: 'Jump to…' })
     .boundingBox()
   assert.ok(jumpBox)
-  assert.ok(Math.abs(jumpBox.width - 176) <= 1)
+  assert.ok(Math.abs(jumpBox.width - 352) <= 1)
   assert.equal(
     await page.getByRole('button', { name: 'Open profile menu' }).count(),
     0
