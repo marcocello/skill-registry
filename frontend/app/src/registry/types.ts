@@ -24,6 +24,9 @@ export type SkillFile = {
 }
 
 export type SkillVersion = {
+  files?: BundleFiles
+  name?: string
+  description?: string
   version: number
   date: string
   author: string

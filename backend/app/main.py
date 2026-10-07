@@ -510,6 +510,14 @@ def create_app(
         _open_mutation(runtime)
         return jsonify(registry.update_skill(slug, _json_body()))
 
+    @app.post("/skills/<slug>/restore")
+    def restore_skill(slug: str) -> Any:
+        principal = _browser_mutation(runtime)
+        if runtime.policy.auth_mode == "google":
+            _admin(principal)
+        author = principal["user_id"] if runtime.policy.auth_mode == "google" else None
+        return jsonify(registry.restore_skill(slug, _json_body(), author)), 201
+
     @app.delete("/skills/<slug>")
     def delete_skill(slug: str) -> Any:
         principal = _browser_mutation(runtime)

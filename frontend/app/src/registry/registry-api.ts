@@ -145,6 +145,9 @@ export function detailToSkill(detail: RegistryDetail): Skill {
     .reverse()
     .map((version) => ({
       version: version.version,
+      files: version.files,
+      name: version.name,
+      description: version.description,
       date: formatDate(version.created_at),
       author: identityLabel(version.author) ?? 'Author not recorded',
       note: `Published version ${version.version}.`,
@@ -206,6 +209,37 @@ export async function deleteRegistrySkill(
   if (!response.ok)
     throw new RegistryApiError(
       payload.message ?? 'Skill deletion failed.',
+      response.status
+    )
+  return payload
+}
+
+export async function restoreRegistrySkill(
+  slug: string,
+  version: number,
+  expectedVersion: number,
+  session: RegistrySession
+): Promise<RegistryVersion> {
+  const response = await fetch(
+    `/api/skills/${encodeURIComponent(slug)}/restore`,
+    {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Origin: window.location.origin,
+        'X-CSRF-Token': session.csrf_token ?? '',
+      },
+      body: JSON.stringify({ version, expected_version: expectedVersion }),
+    }
+  )
+  const payload = (await response.json()) as RegistryVersion & {
+    message?: string
+  }
+  if (!response.ok)
+    throw new RegistryApiError(
+      payload.message ?? 'Version restoration failed.',
       response.status
     )
   return payload
