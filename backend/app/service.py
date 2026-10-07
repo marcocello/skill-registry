@@ -3,6 +3,7 @@ from __future__ import annotations
 import threading
 from collections.abc import Callable
 
+from backend.app.errors import ValidationError
 from backend.app.git_export import GitExporter
 from backend.app.repository import RegistryRepository
 from backend.app.validation import validate_payload
@@ -28,6 +29,19 @@ class RegistryService:
         with self._operation_lock:
             version = self.repository.update_skill(
                 payload, expected_version=expected_version
+            )
+            return self._export_after_write(version)
+
+    def restore_skill(self, slug: str, body: object, author_user_id: str | None) -> dict:
+        if not isinstance(body, dict) or set(body) != {"version", "expected_version"}:
+            raise ValidationError("Restoration requires version and expected_version only.")
+        for field in ("version", "expected_version"):
+            value = body[field]
+            if not isinstance(value, int) or isinstance(value, bool) or value < 1:
+                raise ValidationError(f"{field} must be a positive integer.")
+        with self._operation_lock:
+            version = self.repository.restore_skill(
+                slug, body["version"], body["expected_version"], author_user_id
             )
             return self._export_after_write(version)
 

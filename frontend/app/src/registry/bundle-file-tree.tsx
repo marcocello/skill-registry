@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import type { FileChange } from '@/registry/bundle-diff'
 import type { SkillFile } from '@/registry/types'
 import { ChevronRight, FileCode2, Folder, FolderOpen } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -76,6 +77,7 @@ function TreeItems({
   onSelect,
   collapsedPaths,
   onToggleFolder,
+  statuses,
 }: {
   nodes: BundleTreeNode[]
   level: number
@@ -83,6 +85,7 @@ function TreeItems({
   onSelect: (path: string) => void
   collapsedPaths: ReadonlySet<string>
   onToggleFolder: (path: string) => void
+  statuses?: Record<string, FileChange>
 }) {
   return nodes.map((node) => {
     const paddingLeft = 8 + (level - 1) * 12
@@ -94,6 +97,9 @@ function TreeItems({
           role='treeitem'
           aria-level={level}
           aria-selected={selectedPath === node.path}
+          aria-label={node.name}
+          aria-description={statuses?.[node.path]}
+          title={`${node.path}${statuses?.[node.path] ? ` · ${statuses[node.path]}` : ''}`}
           onClick={() => onSelect(node.path)}
           style={{ paddingLeft }}
           className={cn(
@@ -105,6 +111,21 @@ function TreeItems({
         >
           <FileCode2 className='size-4 shrink-0' />
           <span className='truncate'>{node.name}</span>
+          {statuses?.[node.path] && statuses[node.path] !== 'Unchanged' ? (
+            <span
+              aria-hidden='true'
+              className={cn(
+                'ml-auto text-xs font-semibold',
+                statuses[node.path] === 'Deleted'
+                  ? 'text-red-600 dark:text-red-400'
+                  : statuses[node.path] === 'Added'
+                    ? 'text-emerald-600 dark:text-emerald-400'
+                    : 'text-amber-600 dark:text-amber-400'
+              )}
+            >
+              {statuses[node.path][0]}
+            </span>
+          ) : null}
         </button>
       )
 
@@ -143,6 +164,7 @@ function TreeItems({
               onSelect={onSelect}
               collapsedPaths={collapsedPaths}
               onToggleFolder={onToggleFolder}
+              statuses={statuses}
             />
           </div>
         )}
@@ -155,8 +177,10 @@ export function BundleFileTree({
   files,
   selectedPath,
   onSelect,
+  statuses,
 }: {
   files: SkillFile[]
+  statuses?: Record<string, FileChange>
   selectedPath: string
   onSelect: (path: string) => void
 }) {
@@ -183,6 +207,7 @@ export function BundleFileTree({
         onSelect={onSelect}
         collapsedPaths={collapsedPaths}
         onToggleFolder={toggleFolder}
+        statuses={statuses}
       />
     </div>
   )

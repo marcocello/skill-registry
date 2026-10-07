@@ -769,6 +769,39 @@ class RegistryRepository:
             version_id = self._insert_version(connection, skill["id"], version, payload, now)
         return self.get_version(version_id)
 
+    def restore_skill(
+        self, slug: str, source_version: int, expected_version: int,
+        author_user_id: str | None,
+    ) -> dict:
+        now = _timestamp()
+        with self.connection() as connection:
+            connection.execute("BEGIN IMMEDIATE")
+            skill = connection.execute(
+                "SELECT id, latest_version FROM skills WHERE slug = ?", (slug,)
+            ).fetchone()
+            if skill is None:
+                raise NotFoundError(f"Skill not found: {slug}")
+            if skill["latest_version"] != expected_version:
+                raise ConflictError("The current version changed. Reload the skill before restoring.")
+            source = connection.execute(
+                "SELECT name, description, files_json FROM skill_versions WHERE skill_id = ? AND version = ?",
+                (skill["id"], source_version),
+            ).fetchone()
+            if source is None:
+                raise NotFoundError(f"Version not found: {source_version}")
+            if source_version == expected_version:
+                raise ConflictError("This version is already current.")
+            payload = SkillPayload(slug, source["name"], source["description"], json.loads(source["files_json"]))
+            version = expected_version + 1
+            connection.execute(
+                "UPDATE skills SET name = ?, description = ?, latest_version = ?, updated_at = ? WHERE id = ?",
+                (payload.name, payload.description, version, now, skill["id"]),
+            )
+            version_id = self._insert_version(
+                connection, skill["id"], version, payload, now, author_user_id
+            )
+        return self.get_version(version_id)
+
     def delete_skill(self, slug: str) -> dict:
         now = _timestamp()
         with self.connection() as connection:

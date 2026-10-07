@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
+import { BundleComparison } from '@/registry/bundle-diff'
 import { decideProposal, editProposal } from '@/registry/proposal-api'
+import { getRegistrySkill } from '@/registry/registry-api'
 import type { BundleFiles, RoutePath } from '@/registry/types'
 import { useRegistry } from '@/registry/use-registry'
 import { Check, GitPullRequest, Save, X } from 'lucide-react'
@@ -24,9 +26,15 @@ export function ReviewPage({
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [files, setFiles] = useState<BundleFiles>({})
-  const [selectedFile, setSelectedFile] = useState('SKILL.md')
+  const [baseline, setBaseline] = useState<{
+    key: string
+    files?: BundleFiles
+    error?: string
+  }>({ key: '' })
+  const [retry, setRetry] = useState(0)
   const [reason, setReason] = useState('')
   const [error, setError] = useState('')
+  const [busy, setBusy] = useState(false)
 
   useEffect(() => {
     if (role !== 'Admin') navigate('/')
@@ -38,20 +46,56 @@ export function ReviewPage({
     setName(selected.name)
     setDescription(selected.description)
     setFiles(selected.files)
-    setSelectedFile(
-      selected.files['SKILL.md'] !== undefined
-        ? 'SKILL.md'
-        : (Object.keys(selected.files)[0] ?? '')
-    )
-    setReason('')
   }, [selected])
+  useEffect(() => {
+    // A saved revision must not discard a reason entered during the save.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setReason('')
+    setError('')
+  }, [selected?.id])
+  const baselineKey = selected
+    ? `${selected.id}:${selected.base_version ?? 'new'}`
+    : ''
+  useEffect(() => {
+    if (!selected) return
+    if (selected.action === 'create') return
+    const controller = new AbortController()
+    void getRegistrySkill(selected.slug, controller.signal)
+      .then((skill) => {
+        const version = skill.history.find(
+          (item) => item.version === selected.base_version
+        )
+        if (!version?.files)
+          throw new Error('The proposal base version is unavailable.')
+        setBaseline({ key: baselineKey, files: version.files })
+      })
+      .catch((caught) => {
+        if (!controller.signal.aborted)
+          setBaseline({
+            key: baselineKey,
+            error:
+              caught instanceof Error ? caught.message : 'Comparison failed.',
+          })
+      })
+    return () => controller.abort()
+  }, [baselineKey, retry, selected])
   if (role !== 'Admin' || !session) return null
-  const selectedContent = files[selectedFile]
-  const selectedIsBinary =
-    selectedContent !== undefined && typeof selectedContent !== 'string'
+  const dirty = Boolean(
+    selected &&
+    (name !== selected.name ||
+      description !== selected.description ||
+      JSON.stringify(files) !== JSON.stringify(selected.files))
+  )
+  const baseFiles =
+    selected?.action === 'create'
+      ? {}
+      : baseline.key === baselineKey
+        ? baseline.files
+        : undefined
 
   async function save() {
     if (!selected) return
+    setBusy(true)
     try {
       replaceProposal(
         await editProposal(session!, selected, { name, description, files })
@@ -59,14 +103,18 @@ export function ReviewPage({
       setError('')
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : 'Save failed.')
+    } finally {
+      setBusy(false)
     }
   }
 
   async function decide(decision: 'approve' | 'reject') {
+    if (busy || (decision === 'approve' && dirty)) return
     if (!selected || !reason.trim()) {
       setError('A review reason is required.')
       return
     }
+    setBusy(true)
     try {
       replaceProposal(
         await decideProposal(session!, selected, decision, reason.trim())
@@ -75,6 +123,8 @@ export function ReviewPage({
       setError('')
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : 'Decision failed.')
+    } finally {
+      setBusy(false)
     }
   }
 
@@ -148,53 +198,49 @@ export function ReviewPage({
                     />
                   </label>
                 </div>
-                <div className='space-y-2'>
-                  <div
-                    className='flex flex-wrap gap-2'
-                    aria-label='Proposal files'
-                  >
-                    {Object.keys(files)
-                      .sort()
-                      .map((path) => (
-                        <Button
-                          key={path}
-                          type='button'
-                          size='sm'
-                          variant={
-                            selectedFile === path ? 'default' : 'outline'
-                          }
-                          onClick={() => setSelectedFile(path)}
-                        >
-                          {path}
-                        </Button>
-                      ))}
+                {baseFiles ? (
+                  <BundleComparison
+                    key={selected.id}
+                    before={baseFiles}
+                    after={files}
+                    beforeLabel={
+                      selected.base_version
+                        ? `Base version ${selected.base_version}`
+                        : 'Empty bundle'
+                    }
+                    afterLabel='Proposed changes'
+                    onEdit={(path, content) =>
+                      setFiles((current) => ({ ...current, [path]: content }))
+                    }
+                  />
+                ) : baseline.key === baselineKey && baseline.error ? (
+                  <div role='alert' className='space-y-2 rounded-lg border p-4'>
+                    <p className='text-sm text-destructive'>{baseline.error}</p>
+                    <Button
+                      variant='outline'
+                      onClick={() => {
+                        setBaseline({ key: '' })
+                        setRetry((value) => value + 1)
+                      }}
+                    >
+                      Retry comparison
+                    </Button>
                   </div>
-                  <label className='block space-y-1 text-sm font-medium'>
-                    File content: {selectedFile}
-                    <Textarea
-                      aria-label={`File content: ${selectedFile}`}
-                      className='min-h-72 font-mono'
-                      value={
-                        typeof selectedContent === 'string'
-                          ? selectedContent
-                          : ''
-                      }
-                      disabled={selectedIsBinary}
-                      placeholder={
-                        selectedIsBinary
-                          ? 'Binary asset is preserved as base64 and cannot be edited as text.'
-                          : undefined
-                      }
-                      onChange={(event) =>
-                        setFiles((current) => ({
-                          ...current,
-                          [selectedFile]: event.target.value,
-                        }))
-                      }
-                    />
-                  </label>
-                </div>
-                <Button variant='outline' onClick={() => void save()}>
+                ) : (
+                  <p className='text-sm text-muted-foreground'>
+                    Loading base version…
+                  </p>
+                )}
+                {dirty ? (
+                  <p className='text-sm text-muted-foreground'>
+                    Unsaved changes
+                  </p>
+                ) : null}
+                <Button
+                  variant='outline'
+                  disabled={busy || !dirty}
+                  onClick={() => void save()}
+                >
                   <Save />
                   Save proposal edit
                 </Button>
@@ -211,13 +257,17 @@ export function ReviewPage({
                 ) : null}
                 <div className='flex justify-end gap-2'>
                   <Button
+                    disabled={busy}
                     variant='destructive'
                     onClick={() => void decide('reject')}
                   >
                     <X />
                     Reject
                   </Button>
-                  <Button onClick={() => void decide('approve')}>
+                  <Button
+                    disabled={busy || dirty || !baseFiles}
+                    onClick={() => void decide('approve')}
+                  >
                     <Check />
                     Approve & publish
                   </Button>

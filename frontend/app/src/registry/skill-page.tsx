@@ -5,6 +5,7 @@ import { demoDataEnabled } from '@/registry/demo-data'
 import { LibraryTransferActions } from '@/registry/library-transfer-actions'
 import { PromptAction } from '@/registry/prompt-action'
 import { SkillDeleteButton } from '@/registry/skill-delete-button'
+import { SkillHistory } from '@/registry/skill-history'
 import type { RoutePath, Skill } from '@/registry/types'
 import { useRegistry } from '@/registry/use-registry'
 import {
@@ -15,7 +16,6 @@ import {
   GitPullRequest,
   Pencil,
 } from 'lucide-react'
-import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -169,33 +169,6 @@ function ProposalsTab({ skill }: { skill: Skill }) {
   )
 }
 
-function HistoryTab({ skill }: { skill: Skill }) {
-  return (
-    <div className='overflow-hidden rounded-lg border'>
-      {skill.history.map((version, index) => (
-        <div
-          key={`${version.version}-${version.date}`}
-          className={cn('flex gap-3 p-4', index > 0 && 'border-t')}
-        >
-          <span className='grid size-8 shrink-0 place-items-center rounded-full bg-muted'>
-            <GitCommitHorizontal className='size-4' />
-          </span>
-          <div className='min-w-0 flex-1'>
-            <div className='flex flex-wrap items-center gap-2'>
-              <span className='font-medium'>Version {version.version}</span>
-              <Badge variant='outline'>{version.date}</Badge>
-            </div>
-            <p className='mt-1 text-sm text-muted-foreground'>{version.note}</p>
-            <p className='mt-1 text-xs text-muted-foreground'>
-              Published by {version.author}
-            </p>
-          </div>
-        </div>
-      ))}
-    </div>
-  )
-}
-
 export function SkillPage({
   slug,
   navigate,
@@ -204,6 +177,7 @@ export function SkillPage({
   navigate: (path: RoutePath) => void
 }) {
   const { role, skills, proposals, detailStatus, loadSkill } = useRegistry()
+  const [tab, setTab] = useState({ slug, value: 'files' })
   const skill = skills.find((item) => item.slug === slug)
   const liveStatus = detailStatus[slug] ?? 'idle'
 
@@ -326,7 +300,10 @@ export function SkillPage({
           </div>
         </div>
         <SkillMetadata skill={skill} />
-        <Tabs defaultValue='files'>
+        <Tabs
+          value={tab.slug === slug ? tab.value : 'files'}
+          onValueChange={(value) => setTab({ slug, value })}
+        >
           <TabsList>
             <TabsTrigger value='files'>
               <FolderTree />
@@ -357,7 +334,7 @@ export function SkillPage({
             </TabsContent>
           ) : null}
           <TabsContent value='history' className='mt-4'>
-            <HistoryTab skill={skill} />
+            <SkillHistory key={skill.slug} skill={skill} />
           </TabsContent>
         </Tabs>
       </div>
