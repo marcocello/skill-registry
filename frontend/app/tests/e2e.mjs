@@ -17,7 +17,7 @@ try {
     contentType: "application/json",
     body: JSON.stringify({ code: "UNAUTHORIZED", message: "Authentication required." }),
   }))
-  await page.goto("http://127.0.0.1:4173", { waitUntil: "networkidle" })
+  await page.goto(process.env.E2E_BASE_URL ?? "http://127.0.0.1:4173", { waitUntil: "networkidle" })
   await page.getByRole("heading", { name: "Skill Registry", exact: true }).waitFor({ timeout: 5_000 })
   await page.locator('svg[data-icon="folder-tree"]').waitFor({ timeout: 5_000 })
   await page.getByRole("heading", { name: "Login", exact: true }).waitFor({ timeout: 5_000 })
