@@ -16,7 +16,7 @@ class Settings:
     google_client_id: str = ""
     google_client_secret: str = ""
     allowed_google_domains: tuple[str, ...] = ("example.com",)
-    admin_emails: tuple[str, ...] = ("owner@example.com",)
+    admin_emails: tuple[str, ...] = ()
     host: str = "127.0.0.1"
     port: int = 8000
     google_issuer: str = "https://accounts.google.com"
@@ -45,7 +45,7 @@ class Settings:
             google_client_id=os.environ.get("GOOGLE_CLIENT_ID", ""),
             google_client_secret=os.environ.get("GOOGLE_CLIENT_SECRET", ""),
             allowed_google_domains=_csv(os.environ.get("ALLOWED_GOOGLE_DOMAINS", "example.com")),
-            admin_emails=_csv(os.environ.get("ADMIN_EMAILS", "owner@example.com")),
+            admin_emails=_csv(os.environ.get("ADMIN_EMAILS", "")),
             host=os.environ.get("HOST", "127.0.0.1"),
             port=int(os.environ.get("PORT", "8000")),
             google_issuer=os.environ.get("GOOGLE_ISSUER", "https://accounts.google.com"),
