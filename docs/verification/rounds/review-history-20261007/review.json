@@ -1,0 +1,94 @@
+{
+  "author": "01a115f3-cde8-77f1-82d7-c06b4dd10124",
+  "evidence": [
+    {
+      "digest": "4b050dbc32be7e339353d19400759449e25675dd9fee4ef4b776667ba5c926d5",
+      "kind": "proof",
+      "package": "docs/verification/review-history",
+      "run": "docs/verification/review-history/proof/runs/20261007T110233297460Z"
+    },
+    {
+      "digest": "691a318194c43ef78c1bea222304e060adfdc12514e9bfc010e5afa37ef9faef",
+      "kind": "regression",
+      "package": "docs/verification/review-history",
+      "run": "docs/verification/review-history/tests/runs/20261007T110238431355Z"
+    },
+    {
+      "digest": "d4a9a3ab63a33a12cf4f2beb7a810ea2b16e75a54b4813cb079fdd731c5e257e",
+      "kind": "regression",
+      "package": "docs/verification/review-history",
+      "run": "docs/verification/review-history/tests/runs/20261007T110404940733Z"
+    }
+  ],
+  "features": {
+    "review-file-diffs": {
+      "coverage": {
+        "criteria": {
+          "AC1-diff": [
+            "docs/verification/review-history"
+          ],
+          "AC2-draft": [
+            "docs/verification/review-history"
+          ],
+          "AC3-base": [
+            "docs/verification/review-history"
+          ]
+        },
+        "version": 1
+      },
+      "feature": {
+        "mode": 33188,
+        "sha256": "0f40f1385e0b88ad2eb4bebef7749fcb4b589b6071ac57ad51758662b83ddcbf"
+      },
+      "feature_dir": "docs/features/review-file-diffs"
+    },
+    "review-file-tree": {
+      "coverage": {
+        "criteria": {
+          "AC1-tree": [
+            "docs/verification/review-history"
+          ],
+          "AC2-save": [
+            "docs/verification/review-history"
+          ]
+        },
+        "version": 1
+      },
+      "feature": {
+        "mode": 33188,
+        "sha256": "8e04e0bb100dcea229bb0511b33040beb97c5fcd6904c1cf1ded42d76d4e8554"
+      },
+      "feature_dir": "docs/features/review-file-tree"
+    },
+    "skill-version-restore": {
+      "coverage": {
+        "criteria": {
+          "AC1-compare": [
+            "docs/verification/review-history"
+          ],
+          "AC2-restore": [
+            "docs/verification/review-history"
+          ],
+          "AC3-protect": [
+            "docs/verification/review-history"
+          ]
+        },
+        "version": 1
+      },
+      "feature": {
+        "mode": 33188,
+        "sha256": "0232243207fd1531827aaf1f6eda1cd65a2f7ea468ec4fa64375bda60e35edf3"
+      },
+      "feature_dir": "docs/features/skill-version-restore"
+    }
+  },
+  "implementer": "01a115f3-cde8-77f1-82d7-c06b4dd10124",
+  "kind": "round",
+  "receipt_digest": "31ee6f23289ecf6a857b965d6795a96c87af97c1f39bcc67e5298772eb28a759",
+  "reviewed_at": "2026-10-07T11:05:20.708034+00:00",
+  "reviewer": "01a115f3-cde8-77f1-82d7-c06b4dd10124",
+  "summary": "Reviewed all requested criteria against isolated production Compose: Chromium file-tree navigation, live draft and immutable-base diffs, any-two-version history comparison, protected restore confirmation, immutable SQLite history, complete bundle and metadata read-back, downloads, current Git content, retry/permission/stale/CSRF failures, and backend restart. Focused open-mode concurrency and pending-Git-export checks plus production frontend build/lint/login/skill-action/display-name browser regressions passed. Desktop and mobile screenshots inspected. Only the Google outer identity provider was faked; no deployed instance or live external provider was changed.",
+  "target": "isolated-production-compose",
+  "verdict": "PASS",
+  "version": 2
+}

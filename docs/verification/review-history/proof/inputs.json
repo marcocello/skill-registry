@@ -1,0 +1,1 @@
+{"scope":["backend","frontend/app/src","frontend/app/package.json","frontend/app/pnpm-lock.yaml","frontend/app/vite.config.ts","frontend/Dockerfile","frontend/app/nginx.conf","deployment/prod","docs/verification/review-history","docs/features/google-oidc-registry-access/proof/runtime.py","docs/features/google-oidc-registry-access/proof/fake_google.py"]}

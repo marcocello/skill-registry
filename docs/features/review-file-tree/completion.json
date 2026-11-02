@@ -1,0 +1,31 @@
+{
+  "acceptance": {
+    "coverage": {
+      "criteria": {
+        "AC1-tree": [
+          "docs/verification/review-history"
+        ],
+        "AC2-save": [
+          "docs/verification/review-history"
+        ]
+      },
+      "version": 1
+    },
+    "feature": {
+      "mode": 33188,
+      "sha256": "8e04e0bb100dcea229bb0511b33040beb97c5fcd6904c1cf1ded42d76d4e8554"
+    },
+    "feature_dir": "docs/features/review-file-tree"
+  },
+  "evidence_digest": "31ee6f23289ecf6a857b965d6795a96c87af97c1f39bcc67e5298772eb28a759",
+  "feature_dir": "docs/features/review-file-tree",
+  "feature_id": "review-file-tree",
+  "implementer": "01a115f3-cde8-77f1-82d7-c06b4dd10124",
+  "proof_run": "docs/verification/rounds/review-history-20261007/review.json",
+  "receipt_digest": "87f163040145f8a06bdb491863b57231e0e64da1ec4af02a9e8217d2e6d060be",
+  "recorded_at": "2026-10-07T11:05:47.295479+00:00",
+  "summary": "Reviewed all requested criteria against isolated production Compose: Chromium file-tree navigation, live draft and immutable-base diffs, any-two-version history comparison, protected restore confirmation, immutable SQLite history, complete bundle and metadata read-back, downloads, current Git content, retry/permission/stale/CSRF failures, and backend restart. Focused open-mode concurrency and pending-Git-export checks plus production frontend build/lint/login/skill-action/display-name browser regressions passed. Desktop and mobile screenshots inspected. Only the Google outer identity provider was faked; no deployed instance or live external provider was changed.",
+  "target": "isolated-production-compose",
+  "verdict": "PASS",
+  "version": 1
+}

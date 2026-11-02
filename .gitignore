@@ -34,7 +34,9 @@
 **/dist/
 **/dist-ssr/
 **/coverage/
-docs/
+/docs/interactions/
+/docs/**/proof/runs/
+/docs/**/tests/runs/
 *.db
 *.log
 *.pid

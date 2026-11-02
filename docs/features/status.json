@@ -1,0 +1,167 @@
+{
+  "version": 2,
+  "features": [
+    {
+      "id": "review-file-tree",
+      "feature_dir": "docs/features/review-file-tree",
+      "priority": 1,
+      "status": "done",
+      "owner": null,
+      "proof_run": "docs/verification/rounds/review-history-20261007/review.json",
+      "notes": ""
+    },
+    {
+      "id": "review-file-diffs",
+      "feature_dir": "docs/features/review-file-diffs",
+      "priority": 2,
+      "status": "done",
+      "owner": null,
+      "proof_run": "docs/verification/rounds/review-history-20261007/review.json",
+      "notes": ""
+    },
+    {
+      "id": "skill-version-restore",
+      "feature_dir": "docs/features/skill-version-restore",
+      "priority": 3,
+      "status": "done",
+      "owner": null,
+      "proof_run": "docs/verification/rounds/review-history-20261007/review.json",
+      "notes": ""
+    },
+    {
+      "id": "bundle-file-tree",
+      "feature_dir": "docs/features/bundle-file-tree",
+      "priority": 4,
+      "status": "draft",
+      "owner": null,
+      "proof_run": null,
+      "notes": "Imported historical package: prior lifecycle index absent; retained evidence not reverified."
+    },
+    {
+      "id": "companion-client-installation",
+      "feature_dir": "docs/features/companion-client-installation",
+      "priority": 5,
+      "status": "draft",
+      "owner": null,
+      "proof_run": null,
+      "notes": "Imported historical package: prior lifecycle index absent; retained evidence not reverified."
+    },
+    {
+      "id": "docker-compose-deployment",
+      "feature_dir": "docs/features/docker-compose-deployment",
+      "priority": 6,
+      "status": "draft",
+      "owner": null,
+      "proof_run": null,
+      "notes": "Imported historical package: prior lifecycle index absent; retained evidence not reverified."
+    },
+    {
+      "id": "first-run-instance-setup",
+      "feature_dir": "docs/features/first-run-instance-setup",
+      "priority": 7,
+      "status": "draft",
+      "owner": null,
+      "proof_run": null,
+      "notes": "Imported historical package: prior lifecycle index absent; retained evidence not reverified."
+    },
+    {
+      "id": "github-one-click-remote",
+      "feature_dir": "docs/features/github-one-click-remote",
+      "priority": 8,
+      "status": "draft",
+      "owner": null,
+      "proof_run": null,
+      "notes": "Imported historical package: prior lifecycle index absent; retained evidence not reverified."
+    },
+    {
+      "id": "google-oidc-registry-access",
+      "feature_dir": "docs/features/google-oidc-registry-access",
+      "priority": 9,
+      "status": "draft",
+      "owner": null,
+      "proof_run": null,
+      "notes": "Imported historical package: prior lifecycle index absent; retained evidence not reverified."
+    },
+    {
+      "id": "library-filter-toolbar",
+      "feature_dir": "docs/features/library-filter-toolbar",
+      "priority": 10,
+      "status": "draft",
+      "owner": null,
+      "proof_run": null,
+      "notes": "Imported historical package: prior lifecycle index absent; retained evidence not reverified."
+    },
+    {
+      "id": "library-transfer-actions",
+      "feature_dir": "docs/features/library-transfer-actions",
+      "priority": 11,
+      "status": "draft",
+      "owner": null,
+      "proof_run": null,
+      "notes": "Imported historical package: prior lifecycle index absent; retained evidence not reverified."
+    },
+    {
+      "id": "portal-motion-continuity",
+      "feature_dir": "docs/features/portal-motion-continuity",
+      "priority": 12,
+      "status": "draft",
+      "owner": null,
+      "proof_run": null,
+      "notes": "Imported historical package: prior lifecycle index absent; retained evidence not reverified."
+    },
+    {
+      "id": "role-aware-skill-deletion",
+      "feature_dir": "docs/features/role-aware-skill-deletion",
+      "priority": 13,
+      "status": "draft",
+      "owner": null,
+      "proof_run": null,
+      "notes": "Imported historical package: prior lifecycle index absent; retained evidence not reverified."
+    },
+    {
+      "id": "selectable-library-skills",
+      "feature_dir": "docs/features/selectable-library-skills",
+      "priority": 14,
+      "status": "draft",
+      "owner": null,
+      "proof_run": null,
+      "notes": "Imported historical package: prior lifecycle index absent; retained evidence not reverified."
+    },
+    {
+      "id": "skill-detail-surface",
+      "feature_dir": "docs/features/skill-detail-surface",
+      "priority": 15,
+      "status": "draft",
+      "owner": null,
+      "proof_run": null,
+      "notes": "Imported historical package: prior lifecycle index absent; retained evidence not reverified."
+    },
+    {
+      "id": "skills-card-view",
+      "feature_dir": "docs/features/skills-card-view",
+      "priority": 16,
+      "status": "draft",
+      "owner": null,
+      "proof_run": null,
+      "notes": "Imported historical package: prior lifecycle index absent; retained evidence not reverified."
+    },
+    {
+      "id": "skills-registry-identity",
+      "feature_dir": "docs/features/skills-registry-identity",
+      "priority": 17,
+      "status": "draft",
+      "owner": null,
+      "proof_run": null,
+      "notes": "Imported historical package: prior lifecycle index absent; retained evidence not reverified."
+    },
+    {
+      "id": "sortable-library-columns",
+      "feature_dir": "docs/features/sortable-library-columns",
+      "priority": 18,
+      "status": "draft",
+      "owner": null,
+      "proof_run": null,
+      "notes": "Imported historical package: prior lifecycle index absent; retained evidence not reverified."
+    }
+  ]
+}

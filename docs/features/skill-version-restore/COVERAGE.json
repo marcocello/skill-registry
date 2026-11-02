@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "criteria": {
+    "AC1-compare": [
+      "docs/verification/review-history"
+    ],
+    "AC2-restore": [
+      "docs/verification/review-history"
+    ],
+    "AC3-protect": [
+      "docs/verification/review-history"
+    ]
+  }
+}

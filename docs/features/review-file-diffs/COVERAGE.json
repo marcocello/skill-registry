@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "criteria": {
+    "AC1-diff": [
+      "docs/verification/review-history"
+    ],
+    "AC2-draft": [
+      "docs/verification/review-history"
+    ],
+    "AC3-base": [
+      "docs/verification/review-history"
+    ]
+  }
+}

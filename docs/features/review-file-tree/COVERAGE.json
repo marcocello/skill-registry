@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "criteria": {
+    "AC1-tree": [
+      "docs/verification/review-history"
+    ],
+    "AC2-save": [
+      "docs/verification/review-history"
+    ]
+  }
+}
