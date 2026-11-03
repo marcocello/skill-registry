@@ -47,3 +47,11 @@
 *.egg-info/
 **/build/
 workspace/
+
+# Keep personal deliverables and runtime evidence outside public commits.
+/docs/artifacts/
+/.private/
+/private-data/
+/privacy-backups/
+/data/private/
+/data/results/
